@@ -19,7 +19,7 @@ def check_current(trial):
 def trials(data, prev, i = 0, steps = 0):
     if (bests and 0 < steps > min(bests)):
         return
-    if next(iter(x for x in data if x), None) == data[3]:
+    elif next(iter(x for x in data if x), None) == data[3]:
         bests.append(steps)
     for idx in [i+1, i-1]:
         if 0 <= idx <= 3:
@@ -32,12 +32,14 @@ def trials(data, prev, i = 0, steps = 0):
                 if not check_current(temp):
                     continue
                 t_new = tuple([(len([z for z in a if z in chips]), len([z for z in a if z in gens])) for a in temp] + [idx])
-                if t_new not in prev and (not t_new in prevs or (t_new in prevs and prevs[t_new] <= steps)):
+                if t_new not in prev and (not t_new in prevs or prevs[t_new] <= steps):
                     prevs[t_new] = steps+1
                     trials(temp, prev + [t_new], idx, steps+1)      
 
 
 with open("C:\\Advent\\2016\\day11.txt", 'r') as file:
+    from datetime import datetime
+    e = datetime.now()
     data = [[z.strip('and ').strip(',') for z in y if not 'relevant' in z] for y in [x.strip('.').split('contains ')[1].split(', ') for x in file.read().replace(' and ', ', ').splitlines()]]
     floors = {e : x for e, x in enumerate(data)}
     bests = []
@@ -45,19 +47,14 @@ with open("C:\\Advent\\2016\\day11.txt", 'r') as file:
     chips = [x for x in sum(data,[]) if x.endswith('chip')]
     gens = [x for x in sum(data,[]) if x.endswith('generator')]
     sets = {k : next(iter(x for x in gens if x.startswith(k.split('-')[0])), None) for k in chips}
-    rev = {v:k for k,v in sets.items()}
-    steps = []
     trials([x[:] for x in data], [floors])
     print(min(bests))
-
+    
     data[0] += ["elerium generator", "elerium-compatible microchip", "dilithium generator", "dilithium-compatible microchip"]
-    floors = {e : x for e, x in enumerate(data)}
     bests = []
     prevs = {}
     chips = [x for x in sum(data,[]) if x.endswith('chip')]
     gens = [x for x in sum(data,[]) if x.endswith('generator')]
     sets = {k : next(iter(x for x in gens if x.startswith(k.split('-')[0])), None) for k in chips}
-    rev = {v:k for k,v in sets.items()}
-    steps = []
     trials([x[:] for x in data], [floors])
     print(min(bests))
