@@ -15,7 +15,6 @@ print(current)
 def calc(data):
     x = floor(log(data, 3))
     y = data - 3**x
-    ans = data if y == 0 else (y if x == 1 or y <= (3**x) else 3**x + 2 * (y-3**l))
-    return ans
+    return data if y == 0 else (y if x == 1 or y <= (3**x) else 3**x + 2 * (y-3**l))
 
 print(calc(data))
